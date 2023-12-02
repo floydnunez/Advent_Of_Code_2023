@@ -11,7 +11,7 @@ func main() {
 	digits := [9]string{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
 	fmt.Println(digits)
 
-	readFile, err := os.Open("day01/input.txt")
+	readFile, err := os.Open("day01/overlapping_inputs.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -44,7 +44,6 @@ func main() {
 			firstNumber := getFirstNumberOrText(line, digits)
 			secondNumber := getLastNumberOrText(line, digits)
 			subtotal := (firstNumber * 10) + secondNumber
-			fmt.Println(subtotal)
 			total += subtotal
 		}
 		fmt.Println("part 2:", total)
