@@ -67,8 +67,8 @@ func main() {
 		}
 		total2 += curr.red * curr.green * curr.blue
 	}
-	fmt.Println("part 1 total: ", total1)
-	fmt.Println("part 2 total: ", total2)
+	fmt.Println("part 1 total: ", total1) //2879
+	fmt.Println("part 2 total: ", total2) //65122
 }
 
 func trimEach(sets []string) []string {
