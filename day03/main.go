@@ -11,6 +11,7 @@ import (
 var longline, newline string
 var length int
 var height int
+var mapNumbersPos map[int]int
 
 type coord struct {
 	x int
@@ -32,6 +33,7 @@ func main() {
 	around[5] = coord{0, 1}
 	around[6] = coord{1, 1}
 	around[7] = coord{1, 0}
+	mapNumbersPos = make(map[int]int)
 
 	readFile, err := os.Open("day03/input.txt")
 	if err != nil {
@@ -60,6 +62,7 @@ func main() {
 				if unicode.IsDigit(rune(letra[0])) {
 					current, masX, hasPart := process(longline, x, y)
 					currentVal, _ := strconv.Atoi(current)
+					setMap(currentVal, x, y, masX)
 					if hasPart {
 						total += currentVal
 					}
@@ -67,21 +70,57 @@ func main() {
 				}
 			}
 		}
-		fmt.Println("total part 1:", total, "\n\n")
+		fmt.Println("total part 1:", total, "\n\n") //514969
 	}
-	{
+	{ //part 2
 		total := 0
 		removeNonDoubleGears(newline)
-		total = removeNonGearOperations(newline, total)
+		removeNonGearOperations(newline)
 		removeNonGears()
-		for i, chara := range newline {
-			if i%length == 0 {
-				fmt.Println("")
+		for y := 0; y < height; y++ {
+			for x := 0; x < length; x++ {
+				chara := get(newline, x, y)
+				if chara == "*" {
+					pos1 := findPos(newline, x, y, true)
+					pos2 := findPos(newline, x, y, false)
+					val1 := mapNumbersPos[pos1]
+					val2 := mapNumbersPos[pos2]
+					total += val1 * val2
+					fmt.Println("gear at\t", x, y, "\t=\t", pos1, pos2, "\tvals:\t", val1, val2, "\t=>\t ", val1*val2, "\ttotal:", total)
+				}
 			}
-			fmt.Print(string(chara))
 		}
-		fmt.Println("\n", newline)
-		fmt.Println("total part 2:", total)
+		//for i, chara := range newline {
+		//	if i%length == 0 {
+		//		fmt.Println("\t", (i/length)-1, "\t")
+		//	}
+		//	fmt.Print(string(chara))
+		//}
+		//fmt.Println("\n", mapNumbersPos)
+		//43380668 wrong
+		fmt.Println("total part 2:", total) //78915902 is right
+	}
+}
+
+func findPos(lines string, x int, y int, clockwise bool) int {
+	largo := len(around) - 1
+	for i := range around {
+		pos := around[i]
+		if !clockwise {
+			pos = around[largo-i]
+		}
+		xx := x + pos.x
+		yy := y + pos.y
+		if isDigitAt(lines, xx, yy) {
+			return xx + length*yy
+		}
+	}
+	return -1
+}
+
+func setMap(val int, x int, y int, digits int) {
+	for i := 0; i < digits; i++ {
+		mapNumbersPos[x+y*length+i] = val
 	}
 }
 
@@ -91,38 +130,46 @@ func removeNonDoubleGears(lines string) {
 			letra := get(lines, x, y)
 			if letra[0] == '*' {
 				numbersAround := countNumbersAround(lines, x, y)
-				if !(numbersAround == 2 && checksDoubles(lines, x, y)) && !(numbersAround == 3 && checksTriples(lines, x, y)) {
+				fmt.Println("candidate for removal: ", x, y, "around:", numbersAround)
+				if numbersAround == 2 && checksFakeDoubles(lines, x, y) {
 					replaceNewLines(x, y, 1)
+					fmt.Println("removing fake double gear at", x, y)
+				} else if numbersAround == 3 && checksFakeTriples(lines, x, y) {
+					replaceNewLines(x, y, 1)
+					fmt.Println("removing fake triple gear at", x, y)
+				} else if numbersAround <= 1 {
+					replaceNewLines(x, y, 1)
+					fmt.Println("removing single gear at", x, y)
 				}
 			}
 		}
 	}
 }
 
-func checksTriples(lines string, x int, y int) bool {
+func checksFakeTriples(lines string, x int, y int) bool {
 	if isDigitAt(lines, x-1, y-1) && isDigitAt(lines, x, y-1) && isDigitAt(lines, x+1, y-1) {
-		return false
+		return true
 	}
 	if isDigitAt(lines, x-1, y+1) && isDigitAt(lines, x, y+1) && isDigitAt(lines, x+1, y+1) {
-		return false
+		return true
 	}
-	return true
+	return false
 }
 
-func checksDoubles(lines string, x int, y int) bool {
+func checksFakeDoubles(lines string, x int, y int) bool {
 	if isDigitAt(lines, x-1, y-1) && isDigitAt(lines, x, y-1) {
-		return false
+		return true
 	}
 	if isDigitAt(lines, x, y-1) && isDigitAt(lines, x+1, y-1) {
-		return false
+		return true
 	}
 	if isDigitAt(lines, x-1, y+1) && isDigitAt(lines, x, y+1) {
-		return false
+		return true
 	}
 	if isDigitAt(lines, x, y+1) && isDigitAt(lines, x+1, y+1) {
-		return false
+		return true
 	}
-	return true
+	return false
 }
 
 func countNumbersAround(lines string, x int, y int) int {
@@ -137,24 +184,19 @@ func countNumbersAround(lines string, x int, y int) int {
 	return total
 }
 
-func removeNonGearOperations(lines string, total int) int {
+func removeNonGearOperations(lines string) {
 	for y := 0; y < height; y++ {
 		for x := 0; x < length; x++ {
 			letra := get(lines, x, y)
 			if unicode.IsDigit(rune(letra[0])) {
-				current, masX, hasPart := checkGears(lines, x, y)
+				_, masX, hasPart := checkGears(lines, x, y)
 				if !hasPart {
 					replaceNewLines(x, y, masX)
-				}
-				currentVal, _ := strconv.Atoi(current)
-				if hasPart {
-					total += currentVal
 				}
 				x += masX
 			}
 		}
 	}
-	return total
 }
 
 func removeNonGears() {
