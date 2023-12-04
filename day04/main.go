@@ -60,7 +60,6 @@ func main() {
 		initialCards = append(initialCards, oneCard)
 		total += lineVal
 	}
-	fmt.Println(initialCards)
 	fmt.Println("total part 1:", total) //21919, 50811 was wrong
 
 	var listCards []card
