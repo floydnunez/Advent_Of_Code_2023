@@ -1,0 +1,2 @@
+total part 1: 21919
+total part 2: 9881048

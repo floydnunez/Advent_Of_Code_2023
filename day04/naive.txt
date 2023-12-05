@@ -1,0 +1,37 @@
+goos: darwin
+goarch: arm64
+pkg: 2023/day04
+BenchmarkSolution
+total part 1: 21919
+total part 2: 9881048
+BenchmarkSolution-10    	       1	1254182667 ns/op	3669047856 B/op	    1204 allocs/op
+total part 1: 21919
+total part 2: 9881048
+total part 1: 21919
+total part 2: 9881048
+total part 1: 21919
+total part 2: 9881048
+BenchmarkSolution-10    	       2	 709836604 ns/op	3669039372 B/op	    1189 allocs/op
+total part 1: 21919
+total part 2: 9881048
+total part 1: 21919
+total part 2: 9881048
+total part 1: 21919
+total part 2: 9881048
+BenchmarkSolution-10    	       2	 636787542 ns/op	3669039372 B/op	    1189 allocs/op
+total part 1: 21919
+total part 2: 9881048
+total part 1: 21919
+total part 2: 9881048
+total part 1: 21919
+total part 2: 9881048
+BenchmarkSolution-10    	       2	 529289354 ns/op	3669039376 B/op	    1190 allocs/op
+total part 1: 21919
+total part 2: 9881048
+total part 1: 21919
+total part 2: 9881048
+total part 1: 21919
+total part 2: 9881048
+BenchmarkSolution-10    	       2	 616494812 ns/op	3669039244 B/op	    1188 allocs/op
+PASS
+ok  	2023/day04	9.313s
