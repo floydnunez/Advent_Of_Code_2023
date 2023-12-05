@@ -7,6 +7,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"testing"
 )
 
 type card struct {
@@ -15,6 +16,15 @@ type card struct {
 	numbers []string
 	points  int
 	matches int
+}
+
+func BenchmarkSolution(b *testing.B) {
+	b.ResetTimer()
+	b.ReportAllocs()
+
+	for i := 0; i < b.N; i++ {
+		main()
+	}
 }
 
 func main() {
