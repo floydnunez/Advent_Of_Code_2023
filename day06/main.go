@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	real := 3
+	real := 4
 	var times []int
 	times = []int{7, 15, 30}
 	var distances []int
@@ -19,6 +19,10 @@ func main() {
 	if real == 3 {
 		times = []int{49877895}
 		distances = []int{356137815021882}
+	}
+	if real == 4 {
+		times = []int{498778959999}
+		distances = []int{3561378150218829999}
 	}
 	fmt.Println("real?", real, times, distances)
 	var results []int
