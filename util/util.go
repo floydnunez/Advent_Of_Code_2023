@@ -6,11 +6,11 @@ import (
 	"os"
 )
 
-func ReadFileIntoArray(filename string) ([]string, bool) {
+func ReadFileIntoArray(filename string) []string {
 	readFile, err := os.Open(filename)
 	if err != nil {
 		fmt.Println(err)
-		return nil, true
+		panic("could not read the file")
 	}
 	fileScanner := bufio.NewScanner(readFile)
 	fileScanner.Split(bufio.ScanLines)
@@ -20,5 +20,8 @@ func ReadFileIntoArray(filename string) ([]string, bool) {
 		fileLines = append(fileLines, fileScanner.Text())
 	}
 	errclose := readFile.Close()
-	return fileLines, errclose != nil
+	if errclose != nil {
+		panic("could not close the file")
+	}
+	return fileLines
 }

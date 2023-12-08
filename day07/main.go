@@ -17,11 +17,7 @@ type hand struct {
 }
 
 func main() {
-	fileLines, err := util.ReadFileIntoArray("day07/input.txt")
-	if err {
-		panic("could not read file")
-		return
-	}
+	fileLines := util.ReadFileIntoArray("day07/input.txt")
 	var hands []hand
 	for _, line := range fileLines {
 		thisHand := parseHand(line, false)
@@ -50,7 +46,7 @@ func calcTotal(hands []hand) int {
 		rank := i + 1
 		partial := rank * thisHand.bid
 		//if thisHand.joker {
-		//	fmt.Println("hand", thisHand.cards, thisHand.translatedCards, rank, thisHand.bid, partial, "kind:", thisHand.kind, "translated:", translateKind(thisHand.kind))
+		//fmt.Println("hand", thisHand.cards, thisHand.translatedCards, rank, thisHand.bid, partial, "kind:", thisHand.kind, "translated:", translateKind(thisHand.kind))
 		//}
 		total += partial
 	}
@@ -244,6 +240,8 @@ func orderHand(cards string) string {
 
 func untranslate(cards string) string {
 	cards = strings.Replace(cards, "0", "J", -1)
+	cards = strings.Replace(cards, "U", "J", -1)
+	cards = strings.Replace(cards, "0", "J", -1)
 	cards = strings.Replace(cards, "V", "Q", -1)
 	cards = strings.Replace(cards, "W", "K", -1)
 	cards = strings.Replace(cards, "X", "A", -1)
@@ -251,7 +249,11 @@ func untranslate(cards string) string {
 }
 
 func translateToOrderable(cards string, jokers bool) string {
-	cards = strings.Replace(cards, "J", "0", -1)
+	if jokers {
+		cards = strings.Replace(cards, "J", "0", -1)
+	} else {
+		cards = strings.Replace(cards, "J", "U", -1)
+	}
 	cards = strings.Replace(cards, "Q", "V", -1)
 	cards = strings.Replace(cards, "K", "W", -1)
 	cards = strings.Replace(cards, "A", "X", -1)
