@@ -74,7 +74,8 @@ func main() {
 		}
 		fmt.Println(currdata)
 	}
-	fmt.Println("Part 2: ", totalP2)
+	fmt.Println("Part 1: ", totalP1) //1921197370
+	fmt.Println("Part 2: ", totalP2) //1124
 }
 
 func prepend(val int, ints []int) []int {
